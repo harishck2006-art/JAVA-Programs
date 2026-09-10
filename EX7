@@ -1,0 +1,355 @@
+[?1034h[24bcs170@mepcolinux ex7]$cat ex7.java
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.regex.Pattern;
+
+public class RegistrationForm extends JFrame implements ActionListener {
+
+    // Components of the Form
+    private final JLabel nameLabel, ageLabel, mailIdLabel, genderLabel, contactLabel;
+    private final JTextField nameField, ageField, mailIdField, contactField;
+    private final JRadioButton maleRadioButton, femaleRadioButton;
+    private final ButtonGroup genderGroup;
+    private final JButton okButton, clearButton;
+    private final Container container;
+
+    public RegistrationForm() {
+        setTitle("User Registration Form");
+        setBounds(300, 90, 500, 400);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setResizable(false);
+
+        container = getContentPane();
+        container.setLayout(null);
+
+        // Name
+        nameLabel = new JLabel("Name");
+        nameLabel.setFont(new Font("Arial", Font.PLAIN, 15));
+        nameLabel.setBounds(50, 50, 100, 20);
+        container.add(nameLabel);
+
+        nameField = new JTextField();
+        nameField.setFont(new Font("Arial", Font.PLAIN, 15));
+        nameField.setBounds(150, 50, 250, 20);
+        container.add(nameField);
+
+        // Age
+        ageLabel = new JLabel("Age");
+        ageLabel.setFont(new Font("Arial", Font.PLAIN, 15));
+        ageLabel.setBounds(50, 90, 100, 20);
+        container.add(ageLabel);
+
+        ageField = new JTextField();
+        ageField.setFont(new Font("Arial", Font.PLAIN, 15));
+        ageField.setBounds(150, 90, 250, 20);
+        container.add(ageField);
+
+        // Mail ID
+        mailIdLabel = new JLabel("Mail ID");
+        mailIdLabel.setFont(new Font("Arial", Font.PLAIN, 15));
+        mailIdLabel.setBounds(50, 130, 100, 20);
+        container.add(mailIdLabel);
+
+        mailIdField = new JTextField();
+        mailIdField.setFont(new Font("Arial", Font.PLAIN, 15));
+        mailIdField.setBounds(150, 130, 250, 20);
+        container.add(mailIdField);
+
+        // Gender
+        genderLabel = new JLabel("Gender");
+        genderLabel.setFont(new Font("Arial", Font.PLAIN, 15));
+        genderLabel.setBounds(50, 170, 100, 20);
+        container.add(genderLabel);
+
+        maleRadioButton = new JRadioButton("Male");
+        maleRadioButton.setFont(new Font("Arial", Font.PLAIN, 15));
+        maleRadioButton.setSelected(true);
+        maleRadioButton.setBounds(150, 170, 80, 20);
+        container.add(maleRadioButton);
+
+        femaleRadioButton = new JRadioButton("Female");
+        femaleRadioButton.setFont(new Font("Arial", Font.PLAIN, 15));
+        femaleRadioButton.setBounds(240, 170, 80, 20);
+        container.add(femaleRadioButton);
+
+        genderGroup = new ButtonGroup();
+        genderGroup.add(maleRadioButton);
+        genderGroup.add(femaleRadioButton);
+
+        // Contact Number
+        contactLabel = new JLabel("Contact No");
+        contactLabel.setFont(new Font("Arial", Font.PLAIN, 15));
+        contactLabel.setBounds(50, 210, 100, 20);
+        container.add(contactLabel);
+
+        contactField = new JTextField();
+        contactField.setFont(new Font("Arial", Font.PLAIN, 15));
+        contactField.setBounds(150, 210, 250, 20);
+        container.add(contactField);
+
+        // Buttons
+        okButton = new JButton("OK");
+        okButton.setFont(new Font("Arial", Font.PLAIN, 15));
+        okButton.setBounds(150, 280, 100, 30);
+        container.add(okButton);
+
+        clearButton = new JButton("Clear");
+        clearButton.setFont(new Font("Arial", Font.PLAIN, 15));
+        clearButton.setBounds(270, 280, 100, 30);
+        container.add(clearButton);
+
+        // Add action listeners
+        okButton.addActionListener(this);
+        clearButton.addActionListener(this);
+
+        setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == okButton) {
+            validateAndSubmit();
+        } else if (e.getSource() == clearButton) {
+            clearFields();
+        }
+    }
+
+    /**
+     * Validates all form fields and submits if they are valid.
+     */
+    private void validateAndSubmit() {
+        // Validation logic
+        if (nameField.getText().isEmpty()) {
+            showAlert("Name cannot be empty.");
+            return;
+        }
+        if (!isValidAge(ageField.getText())) {
+            showAlert("Please enter a valid age (numeric).");
+            return;
+        }
+        if (!isValidEmail(mailIdField.getText())) {
+            showAlert("Please enter a valid email address.");
+            return;
+        }
+        if (!isValidContact(contactField.getText())) {
+            showAlert("Please enter a valid 10-digit contact number.");
+            return;
+        }
+
+        // If all validation passes, collect data and show display screen
+        String name = nameField.getText();
+        String age = ageField.getText();
+        String mailId = mailIdField.getText();
+        String gender = maleRadioButton.isSelected() ? "Male" : "Female";
+        String contact = contactField.getText();
+
+        // Create and show the display screen
+        new DisplayScreen(name, age, mailId, gender, contact);
+        this.dispose(); // Close the registration form
+    }
+
+    /**
+     * Clears all the input fields in the form.
+     */
+    private void clearFields() {
+        nameField.setText("");
+        ageField.setText("");
+        mailIdField.setText("");
+        contactField.setText("");
+        genderGroup.clearSelection();
+        maleRadioButton.setSelected(true);
+    }
+    
+    /**
+     * Displays an alert message dialog.
+     */
+    private void showAlert(String message) {
+        JOptionPane.showMessageDialog(this, message, "Validation Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    // --- Validation Helper Methods ---
+    private boolean isValidAge(String age) {
+        if (age.isEmpty()) return false;
+        try {
+            int ageVal = Integer.parseInt(age);
+            return ageVal > 0 && ageVal < 120;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        Pattern pat = Pattern.compile(emailRegex);
+        if (email == null) return false;
+        return pat.matcher(email).matches();
+    }
+
+    private boolean isValidContact(String contact) {
+        String contactRegex = "\\d{10}";
+        Pattern pat = Pattern.compile(contactRegex);
+        if (contact == null) return false;
+        return pat.matcher(contact).matches();
+    }
+
+    public static void main(String[] args) {
+        new RegistrationForm();
+    }
+}
+import javax.swing.*;
+import java.awt.*;
+
+public class DisplayScreen extends JFrame {
+
+    private final JTextArea displayArea;
+    private final Container container;
+
+    public DisplayScreen(String name, String age, String mailId, String gender, String contact) {
+        setTitle("User Details");
+        setBounds(300, 90, 500, 400);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setResizable(false);
+
+        container = getContentPane();
+        container.setLayout(null);
+
+        // Build the display text
+        String details = "--- Submitted User Details ---\n\n" +
+                         "Name: " + name + "\n\n" +
+                         "Age: " + age + "\n\n" +
+                         "Mail ID: " + mailId + "\n\n" +
+                         "Gender: " + gender + "\n\n" +
+                         "Contact No: " + contact;
+
+        displayArea = new JTextArea();
+        displayArea.setText(details);
+        displayArea.setFont(new Font("Arial", Font.PLAIN, 16));
+        displayArea.setBounds(50, 50, 400, 250);
+        displayArea.setEditable(false);
+        displayArea.setLineWrap(true);
+        displayArea.setWrapStyleWord(true);
+        container.add(displayArea);
+        
+        setVisible(true);
+    }
+}
+PS C:\Users\JAVA-C-B1> net use
+New connections will be remembered.
+
+
+Status       Local     Remote                    Network
+
+-------------------------------------------------------------------------------
+Unavailable  Z:        \\172.16.16.220\cse-student\ug\24bcs\c\20703
+                                                Microsoft Windows Network
+The command completed successfully.
+
+b
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+/**
+ * A Java Swing frame that demonstrates event handling for a button and a mouse.
+ */
+public class ImageFrame extends JFrame {
+
+    // Declare GUI components
+    private JTextField clickTextField;
+    private JButton clickButton;
+    private JLabel imageLabel;
+
+    // Icons for original and enlarged states
+    private ImageIcon originalIcon;
+    private ImageIcon enlargedIcon;
+
+    // Counter for button clicks
+    private int clickCount = 0;
+
+    /**
+     * Constructor to set up the GUI.
+     */
+    public ImageFrame() {
+        // 1. Configure the frame
+        setTitle("Image and Button Demo");
+        setSize(500, 500);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout(10, 10)); // Layout with 10px gaps
+
+        // 2. Create and configure components
+        clickTextField = new JTextField("Button Clicks: 0", 20);
+        clickTextField.setEditable(false);
+        clickTextField.setHorizontalAlignment(JTextField.CENTER);
+        clickTextField.setFont(new Font("Arial", Font.BOLD, 14));
+
+        clickButton = new JButton("Click Me!");
+        clickButton.setFont(new Font("Arial", Font.PLAIN, 14));
+
+        // Load the original image. Ensure 'icon.png' is in the project root.
+        originalIcon = new ImageIcon("image.png");
+
+        // Create scaled versions of the image for display
+        Image originalImg = originalIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+        Image enlargedImg = originalIcon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
+
+        // Assign scaled images to ImageIcon variables
+        originalIcon = new ImageIcon(originalImg);
+        enlargedIcon = new ImageIcon(enlargedImg);
+
+        imageLabel = new JLabel(originalIcon);
+        imageLabel.setHorizontalAlignment(JLabel.CENTER);
+
+        // 3. Add event listeners
+
+        // ActionListener for the button (using a lambda expression)
+        clickButton.addActionListener(e -> {
+            clickCount++;
+            clickTextField.setText("Button Clicks: " + clickCount);
+        });
+
+        // MouseListener for the image label (using a MouseAdapter)
+        imageLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                // Enlarge image when mouse enters
+                imageLabel.setIcon(enlargedIcon);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                // Restore image when mouse exits
+                imageLabel.setIcon(originalIcon);
+            }
+        });
+
+        // 4. Add components to the frame
+        add(clickTextField, BorderLayout.NORTH);
+        add(imageLabel, BorderLayout.CENTER);
+        add(clickButton, BorderLayout.SOUTH);
+    }
+
+    /**
+     * Main method to create and display the frame.
+     */
+    public static void main(String[] args) {
+        // Ensure the GUI is created on the Event Dispatch Thread (EDT)
+        SwingUtilities.invokeLater(() -> {
+            new ImageFrame().setVisible(true);
+        });
+    }
+}
+PS C:\Users\JAVA-C-B1> net use
+New connections will be remembered.
+
+
+Status       Local     Remote                    Network
+
+-------------------------------------------------------------------------------
+Unavailable  Z:        \\172.16.16.220\cse-student\ug\24bcs\c\20703
+                                                Microsoft Windows Network
+The command completed successfully.
+[24bcs170@mepcolinux ex7]$exit
+exit
