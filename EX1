@@ -1,0 +1,68 @@
+[24bcs170@mepcolinux java]$cat EX1.prn
+class Employee
+{
+	String name ="harish";
+   String city ="nagercoil",dept="cse",gender="male";
+	int id=170;
+	double basicPay=100000.0;
+	double hra;
+	double da;
+	double netSalary,grossSalary; 
+	double incomeTax =(18/100)*grossSalary;
+	
+	void Calculate()
+	{
+		hra=0.1*basicPay;
+		da=0.3*basicPay;
+		grossSalary=basicPay+hra+da;
+		incomeTax=0.1*grossSalary;
+		netSalary=grossSalary-incomeTax;
+	}
+	void Display()
+	{
+		System.out.println("Name:"+name);
+      System.out.println("Id:"+id);
+      System.out.println("city:"+city);
+      System.out.println("department:"+dept);
+		System.out.println("BasicPay:"+basicPay);
+		System.out.println("Hra:"+hra);
+		System.out.println("DA:"+da);
+		System.out.println("Grosssalary:"+grossSalary);
+		System.out.println("Incometax:"+incomeTax);
+		System.out.println("NetSalary:"+netSalary);
+	}
+}
+public class Main
+{
+	public static void main(String args[])
+	{
+		Employee e1=new Employee();
+		e1.Calculate();
+		e1.Display();
+	}
+}
+
+
+>net use
+New connections will be remembered.
+
+
+Status       Local     Remote                    Network
+
+-------------------------------------------------------------------------------
+OK           Z:        \\172.16.16.220\cse-student\ug\24bcs\c\20703
+                                                Microsoft Windows Network
+The command completed successfully.
+
+Output
+
+Name:harish
+Id:170
+city:nagercoil
+department:cse
+BasicPay100000.0
+Hra10000.0
+DA30000.0
+Grosssalary140000.0
+Incometax14000.0
+NetSalary126000.0
