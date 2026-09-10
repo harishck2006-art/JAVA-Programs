@@ -1,0 +1,363 @@
+[24bcs170@mepcolinux ex4]$cat Ex4
+cat: Ex4: No such file or directory
+[24bcs170@mepcolinux ex4]$cat Ex4.prn
+import java.util.*;
+
+interface Shape
+{
+    // Constant for PI
+    double PI = 3.14159;
+
+    // Abstract methods
+    double calculateArea();
+    double calculateVolume();
+}
+
+class Sphere implements Shape
+{
+    double radius;
+
+    Sphere(double radius)
+    {
+        this.radius = radius;
+    }
+
+    @Override
+    public double calculateArea()
+    {
+        return 4 * PI * radius * radius;
+    }
+
+    @Override
+    public double calculateVolume()
+    {
+        return (4.0 / 3.0) * PI * radius * radius * radius;
+    }
+}
+
+// Cylinder class
+class Cylinder implements Shape
+{
+    double radius, height;
+
+    Cylinder(double radius, double height)
+    {
+        this.radius = radius;
+        this.height = height;
+    }
+
+    @Override
+    public double calculateArea()
+    {
+        // Surface area = 2πr(h + r)
+        return 2 * PI * radius * (height + radius);
+    }
+
+    @Override
+    public double calculateVolume()
+    {
+        // Volume = πr²h
+        return PI * radius * radius * height;
+    }
+}
+
+// Cone class
+class Cone implements Shape
+{
+    double radius, height;
+
+    Cone(double radius, double height)
+    {
+        this.radius = radius;
+        this.height = height;
+    }
+
+    @Override
+    public double calculateArea()
+    {
+        // Surface area = πr(l + r), where l = slant height
+        double slantHeight = Math.sqrt(radius * radius + height * height);
+        return PI * radius * (slantHeight + radius);
+    }
+
+    @Override
+    public double calculateVolume()
+    {
+        // Volume = (1/3)πr²h
+        return (1.0 / 3.0) * PI * radius * radius * height;
+    }
+}
+
+// Main class to test
+public class Shapes
+{
+    public static void main(String[] args)
+    {
+                  Scanner sc = new Scanner(System.in);
+
+                  System.out.print("Enter Radius of the Sphere : ");
+                  int sphereRadius = sc.nextInt();
+
+                  System.out.print("Enter Radius of the Cylinder : ");
+                  int cylinderRadius = sc.nextInt();
+
+                  System.out.print("Enter Height of the Cylinder : ");
+                  int cylinderHeight = sc.nextInt();
+
+                  System.out.print("Enter Radius of the Cone : ");
+                  int coneRadius = sc.nextInt();
+
+                  System.out.print("Enter Height of the one : ");
+                  int coneHeight = sc.nextInt();
+
+
+        Shape sphere = new Sphere(sphereRadius);
+        Shape cylinder = new Cylinder(cylinderRadius,cylinderHeight);
+        Shape cone = new Cone(coneRadius,coneHeight);
+
+        System.out.println("Sphere Area: " + sphere.calculateArea());
+        System.out.println("Sphere Volume: " + sphere.calculateVolume());
+
+        System.out.println("\nCylinder Area: " + cylinder.calculateArea());
+        System.out.println("Cylinder Volume: " + cylinder.calculateVolume());
+
+        System.out.println("\nCone Area: " + cone.calculateArea());
+        System.out.println("Cone Volume: " + cone.calculateVolume());
+    }
+}
+
+
+C:\Users\JAVA-C-B1\Documents\24bcs170\JAVA\EX4>net use
+New connections will be remembered.
+
+
+Status       Local     Remote                    Network
+
+-------------------------------------------------------------------------------
+Unavailable  Z:        \\172.16.16.220\cse-student\ug\24bcs\c\20703
+                                                Microsoft Windows Network
+The command completed successfully.
+
+
+C:\Users\JAVA-C-B1\Documents\24bcs170\JAVA\EX4>javac Shapes.java
+
+C:\Users\JAVA-C-B1\Documents\24bcs170\JAVA\EX4>java Shapes
+Enter Radius of the Sphere : 20
+Enter Radius of the Cylinder : 56
+Enter Height of the Cylinder : 88
+Enter Radius of the Cone : 99
+Enter Height of the one : 15
+Sphere Area: 5026.544
+Sphere Volume: 33510.29333333333
+
+Cylinder Area: 50667.563519999996
+Cylinder Volume: 866978.3091199999
+
+Cone Area: 61932.87060643869
+Cone Volume: 153953.61794999999
+
+
+
+import java.util.Scanner;
+
+// Abstract class
+abstract class CreditCard
+{
+    protected String cardNumber;
+    protected String cardHolderName;
+    protected double maxCreditLimit;
+
+    public CreditCard(String cardNumber, String cardHolderName, double maxCreditLimit)
+         {
+        this.cardNumber = cardNumber;
+        this.cardHolderName = cardHolderName;
+        this.maxCreditLimit = maxCreditLimit;
+    }
+
+    public void displayDetails()
+        {
+        System.out.println("Card Holder Name : " + cardHolderName);
+        System.out.println("Card Number      : " + cardNumber);
+        System.out.println("Maximum Limit    : ₹" + maxCreditLimit);
+    }
+
+    public abstract void calculateBill(double purchaseAmount);
+}
+
+// SilverCard subclass
+class SilverCard extends CreditCard
+{
+    public SilverCard(String cardNumber, String cardHolderName)
+         {
+        super(cardNumber, cardHolderName, 200000);
+    }
+
+    @Override
+    public void calculateBill(double purchaseAmount)
+         {
+        System.out.println("No discount available for Silver Card.");
+        System.out.println("Final Bill Amount : ₹" + purchaseAmount);
+    }
+}
+
+// GoldCard subclass
+class GoldCard extends CreditCard {
+    public GoldCard(String cardNumber, String cardHolderName)
+         {
+        super(cardNumber, cardHolderName, 500000);
+    }
+
+    @Override
+    public void calculateBill(double purchaseAmount)
+         {
+        double discount = 0.05 * purchaseAmount;
+        double finalAmount = purchaseAmount - discount;
+        System.out.println("5% Discount Applied: ₹" + discount);
+        System.out.println("Final Bill Amount   : ₹" + finalAmount);
+    }
+}
+
+// PlatinumCard subclass
+class PlatinumCard extends CreditCard
+{
+    public PlatinumCard(String cardNumber, String cardHolderName)
+         {
+        super(cardNumber, cardHolderName, 1000000);
+    }
+
+    @Override
+    public void calculateBill(double purchaseAmount)
+         {
+        double discount = 0.10 * purchaseAmount;
+        double finalAmount = purchaseAmount - discount;
+        System.out.println("10% Discount Applied: ₹" + discount);
+        System.out.println("Final Bill Amount   : ₹" + finalAmount);
+    }
+}
+
+// Main program
+public class CreditCards
+{
+    public static void main(String[] args)
+         {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Enter Card Holder Name:");
+        String name = sc.nextLine();
+
+        System.out.println("Enter Card Number:");
+        String number = sc.nextLine();
+
+        System.out.println("Choose Card Type:");
+        System.out.println("1. Silver Card");
+        System.out.println("2. Gold Card");
+        System.out.println("3. Platinum Card");
+        int choice = sc.nextInt();
+
+        System.out.println("Enter Purchase Amount:");
+        double amount = sc.nextDouble();
+
+        CreditCard card = null;
+
+        switch (choice)
+                  {
+            case 1:
+                card = new SilverCard(number, name);
+                break;
+            case 2:
+                card = new GoldCard(number, name);
+                break;
+            case 3:
+                card = new PlatinumCard(number, name);
+                break;
+            default:
+                System.out.println("Invalid Choice!");
+                System.exit(0);
+        }
+
+        System.out.println("\n=== Card Details ===");
+        card.displayDetails();
+        System.out.println("====================");
+        card.calculateBill(amount);
+
+        sc.close();
+    }
+}
+
+
+C:\Users\JAVA-C-B1\Documents\24bcs170\JAVA\EX4>net use
+New connections will be remembered.
+
+
+Status       Local     Remote                    Network
+
+-------------------------------------------------------------------------------
+Unavailable  Z:        \\172.16.16.220\cse-student\ug\24bcs\c\20703
+                                                Microsoft Windows Network
+The command completed successfully.
+
+
+C:\Users\JAVA-C-B1\Documents\24bcs170\JAVA\EX4>javac CreditCards.java
+
+C:\Users\JAVA-C-B1\Documents\24bcs170\JAVA\EX4>java CreditCards
+Enter Card Holder Name:
+harish
+Enter Card Number:
+20258963
+Choose Card Type:
+1. Silver Card
+2. Gold Card
+3. Platinum Card
+1
+Enter Purchase Amount:
+25896741
+
+=== Card Details ===
+Card Holder Name : harish
+Card Number      : 20258963
+Maximum Limit    : ?200000.0
+====================
+No discount available for Silver Card.
+Final Bill Amount : ?2.5896741E7
+
+C:\Users\JAVA-C-B1\Documents\24bcs170\JAVA\EX4>java CreditCards
+Enter Card Holder Name:
+varshiv
+Enter Card Number:
+10369741
+Choose Card Type:
+1. Silver Card
+2. Gold Card
+3. Platinum Card
+2
+Enter Purchase Amount:
+10000000
+
+=== Card Details ===
+Card Holder Name : varshiv
+Card Number      : 10369741
+Maximum Limit    : ?500000.0
+====================
+5% Discount Applied: ?500000.0
+Final Bill Amount   : ?9500000.0
+
+C:\Users\JAVA-C-B1\Documents\24bcs170\JAVA\EX4>java CreditCards
+Enter Card Holder Name:
+naveen
+Enter Card Number:
+789456123
+Choose Card Type:
+1. Silver Card
+2. Gold Card
+3. Platinum Card
+3
+Enter Purchase Amount:
+2000000000
+
+=== Card Details ===
+Card Holder Name : naveen
+Card Number      : 789456123
+Maximum Limit    : ?1000000.0
+====================
+10% Discount Applied: ?2.0E8
+Final Bill Amount   : ?1.8E9
