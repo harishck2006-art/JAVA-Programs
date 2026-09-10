@@ -1,0 +1,156 @@
+[24bcs170@mepcolinux ex10]$cat ex10.prn
+Script started on Fri Nov  7 10:37:59 2025
+[24bcs170@mepcolinux ex10]$cat GenericSorterApp.java
+package EX10;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+/**
+ * Main application class.
+ * This class contains the main method to interact with the user
+ * and demonstrates the use of the GenericStore class.
+ */
+public class GenericSorterApp {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("--- Generic Sorter Application ---");
+        System.out.println("What type of data do you want to sort?");
+        System.out.println("  1: Integers");
+        System.out.println("  2: Strings");
+        System.out.print("Enter your choice (1 or 2): ");
+
+        String choice = scanner.next();
+
+        if (choice.equals("1")) {
+            handleIntegers(scanner);
+        } else if (choice.equals("2")) {
+            handleStrings(scanner);
+        } else {
+            System.out.println("Invalid choice. Exiting program.");
+        }
+
+        scanner.close();
+    }
+
+    /**
+     * Handles the logic for entering and sorting Integers.
+     * @param scanner The Scanner object to read user input.
+     */
+    private static void handleIntegers(Scanner scanner) {
+        GenericStore<Integer> intStore = new GenericStore<>();
+        System.out.println("\nEnter integers one by one. Type 'done' when finished.");
+
+        while (true) {
+            System.out.print("Enter integer (or 'done'): ");
+            String input = scanner.next();
+
+            if (input.equalsIgnoreCase("done")) {
+                break;
+            }
+
+            try {
+                // Try to parse the input as an integer
+                int num = Integer.parseInt(input);
+                intStore.addItem(num);
+            } catch (NumberFormatException e) {
+                // Handle cases where the input is not a valid number
+                System.out.println("'" + input + "' is not a valid integer. Please try again.");
+            }
+        }
+
+        System.out.println("\n--- Results ---");
+        System.out.print("Unsorted list: ");
+        intStore.printList();
+
+        // Sort the list
+        intStore.sortList();
+
+        System.out.print("Sorted list:   ");
+        intStore.printList();
+    }
+
+    /**
+     * Handles the logic for entering and sorting Strings.
+     * @param scanner The Scanner object to read user input.
+     */
+    private static void handleStrings(Scanner scanner) {
+        GenericStore<String> stringStore = new GenericStore<>();
+        System.out.println("\nEnter strings one by one (single words). Type 'done' when finished.");
+
+        while (true) {
+            System.out.print("Enter string (or 'done'): ");
+            String input = scanner.next(); // Reads a single word
+
+            if (input.equalsIgnoreCase("done")) {
+                break;
+            }
+
+            stringStore.addItem(input);
+        }
+
+        System.out.println("\n--- Results ---");
+        System.out.print("Unsorted list: ");
+        stringStore.printList();
+
+        // Sort the list
+        stringStore.sortList();
+
+        System.out.print("Sorted list:   ");
+        stringStore.printList();
+    }
+}
+
+/**
+ * A generic class to store and sort a list of items.
+ * This class is NOT public, so it can be included in the same
+ * file as the public GenericSorterApp class.
+ *
+ * We use <T extends Comparable<T>> as a bounded type parameter.
+ * This ensures that any type 'T' used with this class
+ * MUST implement the Comparable interface, which is
+ * necessary for the sortList() method to work.
+ */
+class GenericStore<T extends Comparable<T>> {
+
+    // The ArrayList to store the items of type T
+    private ArrayList<T> list;
+
+    /**
+     * Constructor to initialize the ArrayList.
+     */
+    public GenericStore() {
+        this.list = new ArrayList<>();
+    }
+
+    /**
+     * Adds an item to the list.
+     * @param item The item of type T to add.
+     */
+    public void addItem(T item) {
+        list.add(item);
+    }
+
+    /**
+     * Sorts the list using the natural ordering
+     * defined by the item's compareTo() method.
+     */
+    public void sortList() {
+        Collections.sort(list);
+    }
+
+    /**
+     * Prints the current state of the list to the console.
+     */
+    public void printList() {
+        // Using System.out.println on an ArrayList automatically
+        // calls the toString() method for a nice format [item1, item2, ...]
+        System.out.println(list);
+    }
+}
+[24bcs170@mepcolinux ex10]$exit
+exit
