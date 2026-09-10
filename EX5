@@ -1,0 +1,305 @@
+[24bcs170@mepcolinux ex5]$cat ex5.prn
+5a
+package EX5;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+// 1. Define a functional interface for the arithmetic operations.
+// A functional interface has exactly one abstract method.
+@FunctionalInterface
+interface ArithmeticOperation
+{
+    double calculate(double a, double b);
+}
+
+public class Calculator
+{
+
+    public static void main(String[] args)
+    {
+        Scanner scanner = new Scanner(System.in);
+
+        // 2. Create a Map to store operator symbols and their corresponding lambda expressions.
+        Map<String, ArithmeticOperation> operations = new HashMap<>();
+
+        // 3. Define the basic arithmetic operations using lambda expressions.
+        // These lambdas implement the 'calculate' method of the ArithmeticOperation interface.
+        operations.put("+", (a, b) -> a + b);
+        operations.put("-", (a, b) -> a - b);
+        operations.put("*", (a, b) -> a * b);
+        operations.put("/", (a, b) -> {
+            if (b == 0)
+            {
+                // Handle division by zero
+                throw new ArithmeticException("Error: Cannot divide by zero.");
+            }
+            return a / b;
+        });
+
+        System.out.println("🧮 Simple Arithmetic Calculator 🧮");
+        System.out.println("Enter calculations in the format: number operator number (e.g., 10 * 5)");
+        System.out.println("Type 'exit' to quit.");
+
+        while (true)
+        {
+            try
+            {
+                System.out.print("> ");
+                String input = scanner.nextLine().trim();
+
+                if (input.equalsIgnoreCase("exit"))
+                {
+                    break;
+                }
+
+                // Split the input string into parts: number1, operator, number2
+                String[] parts = input.split(" ");
+                if (parts.length != 3)
+                {
+                    System.out.println("Invalid format. Please use: number operator number");
+                    continue;
+                }
+
+                double num1 = Double.parseDouble(parts[0]);
+                String operator = parts[1];
+                double num2 = Double.parseDouble(parts[2]);
+
+                // 4. Look up the operation in the map and execute it.
+                if (operations.containsKey(operator))
+                {
+                    // Retrieve the correct lambda expression from the map
+                    ArithmeticOperation operation = operations.get(operator);
+                    // Execute the lambda's 'calculate' method
+                    double result = operation.calculate(num1, num2);
+                    System.out.println("Result: " + result);
+                }
+                else
+                {
+                    System.out.println("Error: Unknown operator '" + operator + "'. Use +, -, *, /");
+                }
+
+            }
+            catch (NumberFormatException e)
+            {
+                System.out.println("Error: Invalid number format.");
+            }
+            catch (ArithmeticException e)
+            {
+                System.out.println(e.getMessage());
+            }
+            catch (Exception e)
+            {
+                System.out.println("An unexpected error occurred: " + e.getMessage());
+            }
+        }
+
+        scanner.close();
+        System.out.println("Calculator closed.");
+    }
+}
+PS C:\Users\JAVA-C-B1> net use
+New connections will be remembered.
+
+
+Status       Local     Remote                    Network
+
+-------------------------------------------------------------------------------
+OK           Z:        \\172.16.16.220\cse-student\ug\24bcs\c\20703
+                                                Microsoft Windows Network
+The command completed successfully.
+Result: 30.0
+> 10 - 3
+Result: 7.0
+> 10 /3
+Invalid format. Please use: number operator number
+> 10 % 5
+Error: Unknown operator '%'. Use +, -, *, /
+ex5b
+package EXP5;
+
+
+public class Doctor
+{
+ protected int id;
+ protected String name;
+
+ public Doctor(int id, String name)
+ {
+     this.id = id;
+     this.name = name;
+ }
+
+ /**
+  * Overridden to retrieve the doctor's ID as the hash code.
+  * The contract between equals() and hashCode() is maintained:
+  * if two doctors are equal (same id), they will have the same hash code.
+  * @return The doctor's ID.
+  */
+ @Override
+ public int hashCode()
+ {
+     return id;
+ }
+
+ /**
+  * Overridden to compare two Doctor (or Surgeon) objects.
+  * Two doctors are considered equal if they have the same ID.
+  * @param obj The object to compare against.
+  * @return true if the objects have the same ID, false otherwise.
+  */
+ @Override
+ public boolean equals(Object obj)
+ {
+     // 1. Check if the object is being compared to itself
+     if (this == obj)
+     {
+         return true;
+     }
+     // 2. Check if the other object is null or not an instance of Doctor
+     if (obj == null || !(obj instanceof Doctor))
+     {
+         return false;
+     }
+     // 3. Cast the object to a Doctor type and compare the IDs
+     Doctor other = (Doctor) obj;
+     return this.id == other.id;
+ }
+
+ /**
+  * A standard toString() for the Doctor class.
+  */
+ @Override
+ public String toString()
+ {
+     return "ID: " + this.id + ", Name: " + this.name;
+ }
+}
+surgeon.java
+package EXP5;
+
+
+//File: Surgeon.java
+public class Surgeon extends Doctor
+{
+private String department;
+
+public Surgeon(int id, String name, String department)
+{
+   // Call the constructor of the parent class (Doctor)
+   super(id, name);
+   this.department = department;
+}
+
+/**
+* Overridden to print the doctor's name and their department.
+* It uses the 'name' field inherited from the Doctor class.
+* @return A string containing the name and department.
+*/
+@Override
+public String toString()
+{
+   return "Name: " + this.name + ", Department: " + this.department;
+}
+}
+package EXP5;
+
+//File: Main.java
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+public class Main {
+ public static void main(String[] args) {
+     Scanner scanner = new Scanner(System.in);
+
+     try {
+         // --- Get Doctor Details from User ---
+         System.out.println("--- Enter Details for a Doctor ---");
+         System.out.print("Enter Doctor ID: ");
+         int docId = scanner.nextInt();
+         scanner.nextLine(); // Consume the leftover newline character
+
+         System.out.print("Enter Doctor Name: ");
+         String docName = scanner.nextLine();
+
+         // Create the Doctor object with user input
+         Doctor doctor = new Doctor(docId, docName);
+
+         // --- Get Surgeon Details from User ---
+         System.out.println("\n--- Enter Details for a Surgeon ---");
+         System.out.print("Enter Surgeon ID: ");
+         int surgId = scanner.nextInt();
+         scanner.nextLine(); // Consume the leftover newline character
+
+         System.out.print("Enter Surgeon Name: ");
+         String surgName = scanner.nextLine();
+
+         System.out.print("Enter Surgeon's Department: ");
+         String surgDept = scanner.nextLine();
+
+         // Create the Surgeon object with user input
+         Surgeon surgeon = new Surgeon(surgId, surgName, surgDept);
+
+         // --- Demonstrate the Overridden Methods ---
+         System.out.println("\n--- Demonstrating Overridden Methods ---");
+
+         // 1. Test toString()
+         System.out.println("\n1. toString() Output:");
+         System.out.println("   Doctor Details: " + doctor);  // Calls doctor.toString()
+         System.out.println("   Surgeon Details: " + surgeon); // Calls surgeon.toString()
+
+         // 2. Test hashCode()
+         System.out.println("\n2. hashCode() Output:");
+         System.out.println("   Doctor Hash Code (should be ID): " + doctor.hashCode());
+         System.out.println("   Surgeon Hash Code (should be ID): " + surgeon.hashCode());
+
+         // 3. Test equals()
+         System.out.println("\n3. equals() Output:");
+         boolean areEqual = doctor.equals(surgeon);
+         System.out.println("   Does the Doctor equal the Surgeon? " + areEqual);
+         if (docId == surgId) {
+             System.out.println("   (Result is true because they have the same ID)");
+         } else {
+             System.out.println("   (Result is false because they have different IDs)");
+         }
+
+     } catch (InputMismatchException e) {
+         System.err.println("Invalid input. Please enter a number for the ID.");
+     } finally {
+         scanner.close(); // Always close the scanner
+     }
+ }
+}
+PS C:\Users\JAVA-C-B1> net use
+New connections will be remembered.
+
+
+Status       Local     Remote                    Network
+
+-------------------------------------------------------------------------------
+OK           Z:        \\172.16.16.220\cse-student\ug\24bcs\c\20703
+                                                Microsoft Windows Network
+The command completed successfully.
+-- Enter Details for a Doctor ---
+Enter Doctor ID: 101
+Enter Doctor Name: harish
+
+--- Enter Details for a Surgeon ---
+Enter Surgeon ID: 102
+Enter Surgeon Name: perumal
+Enter Surgeon's Department: cardio
+
+--- Demonstrating Overridden Methods ---
+
+1. toString() Output:
+   Doctor Details: ID: 101, Name: harish
+   Surgeon Details: Name: perumal, Department: cardio
+
+2. hashCode() Output:
+   Doctor Hash Code (should be ID): 101
+   Surgeon Hash Code (should be ID): 102
+
+3. equals() Output:
+   Does the Doctor equal the Surgeon? false
+   (Result is false because they have different IDs)
