@@ -1,0 +1,79 @@
+[?1034h[24bcs170@mepcolinux ex11]$cat MultiplicationTable.java
+package EXP11;
+
+/**
+ * This class defines a Thread that will print the multiplication table
+ * for a given number.
+ */
+class TableThread extends Thread
+{
+    private int number;
+
+    // Constructor to get the number for the table
+    public TableThread(int number)
+    {
+        this.number = number;
+    }
+
+    // This is the code that will run in the new thread
+    public void run()
+    {
+        System.out.println("\nMultiplication Table of " + number + ":");
+        for (int i = 1; i <= 10; i++)
+        {
+            System.out.println(number + " x " + i + " = " + (number * i));
+        }
+    }
+}
+
+/**
+ * This class contains the main method to start and control the threads.
+ */
+public class MultiplicationTable
+{
+    public static void main(String[] args)
+    {
+        // Create the three thread objects
+        TableThread t1 = new TableThread(3);
+        TableThread t2 = new TableThread(5);
+        TableThread t3 = new TableThread(7);
+
+        try {
+            // Start the first thread (table of 3)
+            t1.start();
+            // Wait for the first thread to finish completely
+            t1.join();
+
+            // --- Only after t1 is done, this code will run ---
+
+            // Start the second thread (table of 5)
+            t2.start();
+            // Wait for the second thread to finish completely
+            t2.join();
+
+            // --- Only after t2 is done, this code will run ---
+
+            // Start the third thread (table of 7)
+            t3.start();
+            // Wait for the third thread to finish
+            t3.join();
+
+        } catch (InterruptedException e) {
+            // This exception is thrown if another thread interrupts the 'join'
+            System.out.println(e);
+        }
+    }
+C:\Users\JAVA-C-B1\Documents\24bcs170\JAVA\JAVA ECLIPSE\EXP7>net use
+New connections will be remembered.
+
+
+Status       Local     Remote                    Network
+
+-------------------------------------------------------------------------------
+Unavailable  Z:        \\172.16.16.220\cse-student\ug\24bcs\c\20703
+                                                Microsoft Windows Network
+The command completed successfully.
+
+}
+[24bcs170@mepcolinux ex11]$exit
+exit
